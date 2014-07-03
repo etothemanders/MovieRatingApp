@@ -1,0 +1,15 @@
+<html>
+<head>
+</head>
+<body>
+    <h1>User {{ user.id }}'s Ratings</h1>
+
+    <a href="/add_rating">Add a Movie Rating</a>
+
+    <ul>
+        {% for rating in user.ratings %}
+        <li>Movie: {{ rating.movie.name }} Rating: {{ rating.rating }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

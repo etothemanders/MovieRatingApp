@@ -2,12 +2,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session, joinedload
 import datetime
-ENGINE = None
-Session = None
+
+engine = create_engine("sqlite:///ratings.db", echo=False)
+session = scoped_session(sessionmaker(bind=engine,
+                         autocommit = False,
+                         autoflush = False))
 
 Base = declarative_base()
+Base.query = session.query_property()
 
 ### Class declarations go here
 
@@ -49,27 +53,33 @@ class Movie(Base):
     genre_War = Column(Integer)
     genre_Western = Column(Integer)
 
-
 class Rating(Base):
     __tablename__ = "ratings"
 
     id = Column(Integer, primary_key=True)
-    movie_id = Column(Integer)
+    movie_id = Column(Integer, ForeignKey('movies.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
     rating = Column(Integer)
 
     user = relationship("User", backref=backref("ratings", order_by=id))
+    movie = relationship("Movie", backref=backref("ratings", order_by=id))
 
 ### End class declarations
+### Begin other functions
 
-def connect():
-    global ENGINE
-    global Session
+def add_user(email, password, age, gender, occupation, zipcode):
+    new_user = User(email=email, password=password, age=age, gender=gender, occupation=occupation, zipcode=zipcode)
+    session.add(new_user)
+    session.commit()  
+    return "successfully added new user"
 
-    ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-    Session = sessionmaker(bind=ENGINE)
-
-    return Session()
+def get_user_by_email_password(email, password):
+    user = session.query(User).filter_by(email=email).filter_by(password=password).one()
+    if user:
+        print user
+        return user
+    else:
+        return False
 
 def main():
     """In case we need this for something"""
