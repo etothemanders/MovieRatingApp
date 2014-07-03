@@ -76,10 +76,20 @@ def add_user(email, password, age, gender, occupation, zipcode):
 def get_user_by_email_password(email, password):
     user = session.query(User).filter_by(email=email).filter_by(password=password).one()
     if user:
-        print user
         return user
     else:
         return False
+
+def add_rating_record(movie_id, user_id, rating):
+    new_rating = Rating(movie_id=movie_id, user_id=user_id, rating=rating)
+    session.add(new_rating)
+    session.commit()
+    return "Successfully added new movie rating"
+
+def get_movie_id_by_title(title):
+    movie = session.query(Movie).filter_by(name=title).one()
+    if movie:
+        return movie.id
 
 def main():
     """In case we need this for something"""

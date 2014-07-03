@@ -27,7 +27,7 @@ def process_signup():
     gender = request.form['gender']
     occupation = request.form['occupation']
     zipcode = request.form['zipcode']
-    new_user = model.add_user(email, password, age, gender, occupation, zipcode)
+    model.add_user(email, password, age, gender, occupation, zipcode)
     return redirect("/")
 
 
@@ -63,12 +63,27 @@ def show_user_details(user_id):
     user = model.session.query(model.User).get(user_id)
     return render_template("user_detail.html",
                             user = user)
+
 @app.route("/add_rating", methods=["GET", "POST"])
 def add_rating():
     if request.method == "GET":
-        return "testing add rating page"
-    else:
-        return "testing post add rating page"
+        return render_template("add_rating.html")
+    elif request.method== "POST":
+        movie_title = request.form["moviesearch"]
+        movies = model.session.query(model.Movie).filter(model.Movie.name.like("%" + movie_title + "%")).all()
+        return render_template("add_rating.html", movies=movies)
+
+@app.route("/rating_confirmation", methods=["POST"])
+def confirm_rating():
+    results = request.form
+
+    for rating in results:
+        movie_name = rating
+        rating_value = results[movie_name]
+        movie_id = model.get_movie_id_by_title(movie_name)
+        model.add_rating_record(movie_id, session['user'], rating_value)
+    return render_template("rating_confirmation.html", user_id=session['user'])
+
 
 if __name__ == "__main__":
     app.run(debug=True)

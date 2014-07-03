@@ -3,8 +3,27 @@
 <body>
     <h1>Add a Movie Rating</h1>
 
-    <form action="/add_rating" method=["POST"]>
+    <form action="/add_rating" method="POST">
     Search Movie Database: <input type="search" name="moviesearch"><br>
+    <input type="submit">
+    </form>
+
+    <form action="/rating_confirmation" method="POST">
+    <ul>
+        {% for movie in movies %}
+
+        <li>Movie: {{ movie.name }}
+        <div>Rating:
+        <input type="radio" name= "{{ movie.name }}" value="1">1
+        <input type="radio" name="{{ movie.name }}" value="2">2
+        <input type="radio" name="{{ movie.name }}" value="3">3
+        <input type="radio" name="{{ movie.name }}" value="4">4
+        <input type="radio" name="{{ movie.name }}" value="5">5
+        </div>
+        </li>
+
+        {% endfor %}
+    </ul>
     <input type="submit">
     </form>
 
