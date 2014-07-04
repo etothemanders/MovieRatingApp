@@ -84,6 +84,10 @@ def confirm_rating():
         model.add_rating_record(movie_id, session['user'], rating_value)
     return render_template("rating_confirmation.html", user_id=session['user'])
 
+@app.route("/base")
+def base():
+    return render_template("base.html", user_id=session['user'])
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,7 +1,5 @@
-<html>
-<head>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block body %}
     <h1>User {{ user.id }}'s Ratings</h1>
 
     <a href="/add_rating">Add a Movie Rating</a>
@@ -11,5 +9,4 @@
         <li>Movie: {{ rating.movie.name }} Rating: {{ rating.rating }}</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}

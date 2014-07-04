@@ -1,10 +1,7 @@
-<html>
-<head></head>
-<body>
+{% extends 'base.html' %}
+{% block body %}
     <h1>Rating Confirmation Page</h1>
     <p>You added some ratings!</p>
 
     <a href="/user_detail/{{user_id}}">Go Back to User Details</a>
-
-</body>
-</html>
+{% endblock %}
